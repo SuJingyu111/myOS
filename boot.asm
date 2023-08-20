@@ -1,7 +1,24 @@
-ORG 0x7c00
+ORG 0
 BITS 16
+_start: ; required by BPB of some bios
+    jmp short start
+    nop
+
+times 33 db 0 ; create a fake BPB in case of BIOS rewrite
 
 start:
+    jmp 0x7c0:execute
+
+execute:
+    cli ; Clear Interrupts
+    mov ax, 0x7c0
+    mov ds, ax
+    mov es, ax
+    mov ax, 0x00
+    mov ss, ax
+    mov sp, 0x7c00
+    sti ; Enable Interrupts
+
     mov si, message
     call print
     jmp $
