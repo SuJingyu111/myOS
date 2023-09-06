@@ -72,5 +72,5 @@ void kernel_main()
     // init the iterrupt descriptor table
     idt_init();
 
-    outb(0x60, 0xff);
+    
 }
