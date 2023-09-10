@@ -75,4 +75,7 @@ void kernel_main()
 
     // Initialize the iterrupt descriptor table
     idt_init();
+
+    // Enable interrupts
+    enable_interrupts();
 }

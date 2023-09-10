@@ -21,6 +21,7 @@ struct idtr_desc
 
 // Init the iterrupt descriptor table
 void idt_init();
-
+void enable_interrupts();
+void disable_interrupts();
 
 #endif

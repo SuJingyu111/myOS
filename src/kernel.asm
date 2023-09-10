@@ -30,11 +30,8 @@ _start:
 
     mov al, 00000001b 
     out 0x21, al
-
     ; End of master PIC remap
 
-    ; Enable interrupts
-    sti
     call kernel_main
     jmp $
 
