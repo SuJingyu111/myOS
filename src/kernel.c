@@ -4,12 +4,13 @@
 #include "idt/idt.h"
 #include "io/io.h"
 #include "memory/heap/kheap.h"
+#include "memory/paging/paging.h"
 
 uint16_t* video_mem = 0;
 uint16_t terminal_row = 0;
 uint16_t terminal_col = 0;
 
-uint16_t terminal_make_char(char c, char color) 
+uint16_t terminal_make_char(char c, char color)
 {
     return (color << 8) | c;
 }
@@ -19,7 +20,7 @@ void terminal_putchar(int x, int y, char c, char color)
     video_mem[y * VGA_WIDTH + x] = terminal_make_char(c, color);
 }
 
-void terminal_print_char(char c, char color) 
+void terminal_print_char(char c, char color)
 {
     if (c == '\n') {
         terminal_col = 0;
@@ -64,7 +65,9 @@ void print(const char* str)
     }
 }
 
-void kernel_main() 
+static struct paging_4gb_chunk* kernel_chunk = NULL;
+
+void kernel_main()
 {
     terminal_initialize();
     char* hello_word = "Hello World!\nThis is my first kernel!\n";
@@ -75,6 +78,15 @@ void kernel_main()
 
     // Initialize the iterrupt descriptor table
     idt_init();
+
+    // Setup paging
+    kernel_chunk = paging_new_4gb(PAGING_IS_WRITABLE | PAGING_IS_PRESENT | PAGING_ACCESS_FROM_ALL);
+
+    // Switch to kernel paging chunk
+    paging_switch(paging_4gb_chunk_get_directory(kernel_chunk));
+
+    // Enable paging
+    enable_paging();
 
     // Enable interrupts
     enable_interrupts();
