@@ -10,6 +10,7 @@ paging_load_directory:
     mov ebp, esp
     mov eax, [ebp+8]
     mov cr3, eax
+    mov esp, ebp
     pop ebp,
     ret
 
@@ -19,5 +20,6 @@ enable_paging:
     mov eax, cr0
     or eax, 0x80000000
     mov eax, cr0
+    mov esp, ebp
     pop ebp,
     ret

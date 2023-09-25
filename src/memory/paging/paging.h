@@ -13,8 +13,10 @@
 #define PAGING_TOTAL_ENTRIES_PER_TABLE 1024
 #define PAGING_PAGE_SIZE 4096
 
+typedef uint32_t* PAGING_PAGE;
 typedef uint32_t PAGING_PAGE_ENTRY;
-typedef PAGING_PAGE_ENTRY* PAGING_PAGE_TABLE_ENTRY;
+typedef PAGING_PAGE_ENTRY* PAGING_PAGE_TABLE;
+typedef uint32_t PAGING_PAGE_TABLE_ENTRY;
 typedef PAGING_PAGE_TABLE_ENTRY* PAGING_MASTER_DIRECTORY;
 
 
@@ -26,6 +28,10 @@ struct paging_4gb_chunk
 struct paging_4gb_chunk* paging_new_4gb(uint8_t flags);
 void paging_switch(PAGING_MASTER_DIRECTORY directory);
 void enable_paging();
+
+int paging_set(PAGING_MASTER_DIRECTORY directory, void* vaddr, PAGING_PAGE_TABLE_ENTRY page_entry);
+int paging_get_indexes(void* vaddr, uint32_t* directory_index_out, uint32_t* table_index_out);
+
 PAGING_MASTER_DIRECTORY paging_4gb_chunk_get_directory(struct paging_4gb_chunk* mem_chunk);
 
 #endif
